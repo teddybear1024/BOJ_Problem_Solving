@@ -1,14 +1,16 @@
 #include <bits/stdc++.h>
 using namespace std;
-stack <int> s1;
-stack <int> s2;
-vector <int> v;
-char c[30],d[300005];
-int n,m,a,b,t,t1[300005],t2[300005],k,cnt;
+stack <int> s1; //Check from the front
+stack <int> s2; //Check from the back
+vector <int> v; //Group of deleted characters
+char c[30],d[300005]; // c : target string, d : full string
+int n,m,a,b; // n : length of c, m : length of d, a : index from front, b : index from back
+int t1[300005],t2[300005]; // t1 : next character index, t2 : previous character index
+int k,cnt; // k : index of target string's front/back, cnt : true/false of target string spotted
 int main(void){
 	scanf("%s %s",c,d);
 	n=strlen(c);m=strlen(d);
-	for(int i=0;i<m-1;i++){
+	for(int i=0;i<m-1;i++){ // setting t1 and t2
         t1[i]=i+1;
 	}
 	t1[m-1]=1234567;
@@ -17,7 +19,7 @@ int main(void){
 	}
 	a=0;b=m-1;
 	while(1){
-        for(int i=0;i<n;i++){
+        for(int i=0;i<n;i++){ // delete used character & n characters for check again
             if(s1.empty())break;
             else if(d[s1.top()]==0){
                 s1.pop();
@@ -31,7 +33,7 @@ int main(void){
         cnt=0;
         for(int i=a;i<m;i=t1[i]){
             k=i;
-            for(int j=0;j<n;j++){
+            for(int j=0;j<n;j++){ 
                 if(k==1234567)break;
                 if(d[k]==c[j]){
                     v.push_back(k);
@@ -44,17 +46,17 @@ int main(void){
                         v.clear();
                         if(s1.empty())i=-1;
                         else i=s1.top();
-                        if(i==-1&&k==1234567){
+                        if(i==-1&&k==1234567){ // if target string's position is start or end of the full string
                             return 0;
                         }
                         else if(i==-1){
-                            t2[k]=-1;
+                            t2[k]=-1; // connect front
                         }
                         else if(k==1234567){
-                            t1[i]=1234567;
+                            t1[i]=1234567; // connect end 
                         }
                         else{
-                            t2[k]=i;
+                            t2[k]=i; // connect front and end of the target string
                             t1[i]=k;
                         }
                         cnt=1;
@@ -73,7 +75,7 @@ int main(void){
             }
         }
         if(cnt==0)break;
-        for(int i=0;i<n;i++){
+        for(int i=0;i<n;i++){ // same as above(line 20 ~ 75), but checking from back
             if(s2.empty())break;
             else if(d[s2.top()]==0){
                 s2.pop();
